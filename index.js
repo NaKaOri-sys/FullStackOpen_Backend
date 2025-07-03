@@ -54,6 +54,29 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end();
 });
 
+app.post('/api/persons', (req, res) => {
+    const body = req.body;
+    if (!body) {
+        res.status(400).end().json({
+            error: 'parameters is missing.'
+        });
+        return;
+    }
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    }
+    persons = persons.concat(person);
+    res.json(person);
+});
+
+const generateId = () => {
+    let min = persons.length;
+    let max = min + 100;
+    return Math.floor(Math.random() * (max - min) + min);
+};
+
 app.get('/info', (req, res) => {
     let today = new Date();
     let htmlResponse = `

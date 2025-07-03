@@ -1,8 +1,19 @@
+@urlBase=http://localhost:3001
+
 ###GetAll
-GET http://localhost:3001/api/persons
+GET {{urlBase}}/api/persons
 
 ###GetByID
-GET http://localhost:3001/api/persons/2
+GET {{urlBase}}/api/persons/91
 
 ###DeleteByID
-DELETE http://localhost:3001/api/persons/2
+DELETE {{urlBase}}/api/persons/91
+
+###CreatePerson
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "Nahuel",
+    "number": "1124544412"
+}
