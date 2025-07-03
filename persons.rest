@@ -1,0 +1,8 @@
+###GetAll
+GET http://localhost:3001/api/persons
+
+###GetByID
+GET http://localhost:3001/api/persons/2
+
+###DeleteByID
+DELETE http://localhost:3001/api/persons/2
