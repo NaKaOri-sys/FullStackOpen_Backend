@@ -56,20 +56,36 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body;
-    if (!body) {
-        res.status(400).end().json({
-            error: 'parameters is missing.'
-        });
-        return;
-    }
     const person = {
         id: generateId(),
         name: body.name,
         number: body.number
     }
+    let errorResponse = validateCreatePerson(person)
+    if (errorResponse) {
+        res.status(400).json({
+            error: errorResponse
+        });
+        return;
+    }
     persons = persons.concat(person);
     res.json(person);
 });
+
+const validateCreatePerson = (body) => {
+    if (!body.name && !body.number) {
+        return 'name and number is missing';
+    }
+    if (!body.name) {
+        return 'name is missing.';
+    }
+    if (!body.number) {
+        return 'number is missing.';
+    }
+    if (persons.find(p => p.name === body.name)) {
+        return 'name must be unique';
+    }
+}
 
 const generateId = () => {
     let min = persons.length;

@@ -17,3 +17,33 @@ Content-Type: application/json
     "name": "Nahuel",
     "number": "1124544412"
 }
+
+###CreatePerson name exist
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "Nahuel",
+    "number": "1124544412"
+}
+###CreatePerson empty content
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    
+}
+###CreatePerson empty number
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "Nahuel"
+}
+###CreatePerson empty name
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "number": "1124544412"
+}
