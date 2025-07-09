@@ -1,0 +1,9 @@
+@urlBase=http://localhost:3001
+###Get all
+{{urlBase}}/api/persons
+
+###Get by ID
+{{urlBase}}/api/persons/686ee865b3858e977e2d496c
+
+###Get by ID, but incorrect ID
+{{urlBase}}/api/persons/5235jasdas123
