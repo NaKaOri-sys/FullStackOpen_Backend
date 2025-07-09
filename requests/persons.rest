@@ -1,9 +1,42 @@
 @urlBase=http://localhost:3001
 ###Get all
-{{urlBase}}/api/persons
+GET {{urlBase}}/api/persons
 
 ###Get by ID
-{{urlBase}}/api/persons/686ee865b3858e977e2d496c
+GET {{urlBase}}/api/persons/686ee865b3858e977e2d496c
 
 ###Get by ID, but incorrect ID
-{{urlBase}}/api/persons/5235jasdas123
+GET {{urlBase}}/api/persons/5235jasdas123
+
+###Create person
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "Julian Alvarez",
+    "number": 11111111
+}
+
+###Create person empty name
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "number": 11111111
+}
+
+###Create person empty number
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "Julian Alvarez"
+}
+
+###Create person empty json
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    
+}

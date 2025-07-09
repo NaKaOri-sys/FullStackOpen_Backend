@@ -27,7 +27,7 @@ app.get('/api/persons/:id', (req, res) => {
         res.json(person);
     }).catch(error => {
         console.error('error get by id', error.message);
-        res.status(404).json(error);
+        res.status(500).json(error);
     });
 });
 
@@ -43,11 +43,10 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body;
-    const person = {
-        id: generateId(),
+    const person = new Person({
         name: body.name,
         number: body.number
-    }
+    });
     let errorResponse = validateCreatePerson(person)
     if (errorResponse) {
         res.status(400).json({
@@ -55,8 +54,9 @@ app.post('/api/persons', (req, res) => {
         });
         return;
     }
-    persons = persons.concat(person);
-    res.json(person);
+    person.save().then(p => {
+        res.json(person);
+    });
 });
 
 const validateCreatePerson = (body) => {
@@ -69,9 +69,9 @@ const validateCreatePerson = (body) => {
     if (!body.number) {
         return 'number is missing.';
     }
-    if (persons.find(p => p.name === body.name)) {
-        return 'name must be unique';
-    }
+    // if (Person.find(p => p.name === body.name)) {
+    //     return 'name must be unique';
+    // }
 }
 
 const generateId = () => {
