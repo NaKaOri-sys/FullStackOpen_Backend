@@ -32,13 +32,18 @@ app.get('/api/persons/:id', (req, res) => {
 });
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    if (!persons.find(p => p.id === id)) {
-        res.status(404).end();
-        return;
-    }
-    persons = persons.filter(p => p.id !== id);
-    res.status(204).end();
+    const id = req.params.id;
+    Person.findByIdAndDelete(id).then(data => {
+        if (!data) {
+            res.status(400).json({ 'error': 'no persons found given ID.' }).end();
+            return;
+        }
+        console.log('data', data);
+        res.status(200).json(data).end();
+    }).catch(error => {
+        console.error('error delete', error);
+        res.status(500).json(error);
+    });
 });
 
 app.post('/api/persons', (req, res) => {

@@ -40,3 +40,9 @@ Content-Type: application/json
 {
     
 }
+
+###Delete person correct id
+DELETE {{urlBase}}/api/persons/68711e3a35b1c0e55a418a10
+
+###Delete incorrect ID
+DELETE {{urlBase}}/api/persons/686b304f20d5df969a48dcd4
