@@ -15,23 +15,20 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello World<h1/>')
 });
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
     Person.find({}).then(result => {
         res.json(result);
-    })
+    }).catch(error => next(error));
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
     Person.findById(id).then(person => {
         res.json(person);
-    }).catch(error => {
-        console.error('error get by id', error.message);
-        res.status(500).json(error);
-    });
+    }).catch(error => next(error));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
     Person.findByIdAndDelete(id).then(data => {
         if (!data) {
@@ -40,13 +37,10 @@ app.delete('/api/persons/:id', (req, res) => {
         }
         console.log('data', data);
         res.status(200).json(data).end();
-    }).catch(error => {
-        console.error('error delete', error);
-        res.status(500).json(error);
-    });
+    }).catch(error => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
     const person = new Person({
         name: body.name,
@@ -61,7 +55,7 @@ app.post('/api/persons', (req, res) => {
     }
     person.save().then(p => {
         res.json(person);
-    });
+    }).catch(error => next(error));
 });
 
 const validateCreatePerson = (body) => {
@@ -79,12 +73,6 @@ const validateCreatePerson = (body) => {
     // }
 }
 
-const generateId = () => {
-    let min = persons.length;
-    let max = min + 100;
-    return Math.floor(Math.random() * (max - min) + min);
-};
-
 app.get('/info', (req, res) => {
     let today = new Date();
     let htmlResponse = `
@@ -95,6 +83,17 @@ app.get('/info', (req, res) => {
     res.send(htmlResponse).end();
 });
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+app.use(errorHandler);
 const PORT = 3001
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
