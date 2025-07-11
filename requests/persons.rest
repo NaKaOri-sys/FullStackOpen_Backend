@@ -46,3 +46,21 @@ DELETE {{urlBase}}/api/persons/68711e3a35b1c0e55a418a10
 
 ###Delete incorrect ID
 DELETE {{urlBase}}/api/persons/686b304f20d5df969a48dcd4
+
+
+###Update number
+POST {{urlBase}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "Julian Alvarez",
+    "number": 11111111
+}
+
+###Create person empty name
+PUT {{urlBase}}/api/persons/6871485183d665a9f4e283aa
+Content-Type: application/json
+
+{
+
+}

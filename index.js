@@ -24,6 +24,10 @@ app.get('/api/persons', (req, res, next) => {
 app.get('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
     Person.findById(id).then(person => {
+        if (!person) {
+            res.status(404).json({ error: 'n' });
+            return;
+        }
         res.json(person);
     }).catch(error => next(error));
 });
@@ -37,6 +41,21 @@ app.delete('/api/persons/:id', (req, res, next) => {
         }
         console.log('data', data);
         res.status(200).json(data).end();
+    }).catch(error => next(error));
+});
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    const person = {
+        number: body.number
+    }
+    Person.findByIdAndUpdate(id, person, { new: true }).then(data => {
+        if (!data) {
+            res.status(400).json({ 'error': 'no persons found given ID.' }).end();
+            return;
+        }
+        res.json(data).end();
     }).catch(error => next(error));
 });
 
@@ -73,24 +92,26 @@ const validateCreatePerson = (body) => {
     // }
 }
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
     let today = new Date();
-    let htmlResponse = `
-    <div>
-        <p>Phonebook has info for ${persons.length} people</p>
-        <p>${today}</p>
-    </div>`;
-    res.send(htmlResponse).end();
+    Person.countDocuments().then(data => {
+        let htmlResponse = `
+        <div>
+            <p>Phonebook has info for ${data} people</p>
+            <p>${today}</p>
+        </div>`;
+        res.send(htmlResponse).end();
+    }).catch(error => next(error));
 });
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+    console.error(error.message)
 
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  } 
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
 
-  next(error)
+    next(error)
 }
 
 app.use(errorHandler);
