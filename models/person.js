@@ -10,7 +10,10 @@ const personSchema = new mongoose.Schema({
         minLength: 3,
         required: true
     },
-    number: Number
+    number: {
+        type: Number,
+        required: true
+    }
 });
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {

@@ -49,8 +49,9 @@ app.put('/api/persons/:id', (req, res, next) => {
     const body = req.body;
     const person = {
         number: body.number
-    }
-    Person.findByIdAndUpdate(id, person, { new: true }).then(data => {
+    };
+
+    Person.findByIdAndUpdate(id, person, { new: true, runValidators: true }).then(data => {
         if (!data) {
             res.status(400).json({ 'error': 'no persons found given ID.' }).end();
             return;
@@ -65,13 +66,13 @@ app.post('/api/persons', (req, res, next) => {
         name: body.name,
         number: body.number
     });
-    let errorResponse = validateCreatePerson(person)
-    if (errorResponse) {
-        res.status(400).json({
-            error: errorResponse
-        });
-        return;
-    }
+    // let errorResponse = validateCreatePerson(person)
+    // if (errorResponse) {
+    //     res.status(400).json({
+    //         error: errorResponse
+    //     });
+    //     return;
+    // }
     person.save().then(p => {
         res.json(person);
     }).catch(error => next(error));
@@ -105,13 +106,13 @@ app.get('/info', (req, res, next) => {
 });
 
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
     }
     if (error.name === 'ValidationError') {
-        return response.status(400).send({ error: 'The field name must have more than 3 characters.' });
+        return response.status(400).send({
+            error: "The fields are required, and 'name' must have three characters."
+        });
     }
 
     next(error)
